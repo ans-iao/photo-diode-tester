@@ -10,11 +10,11 @@ int main() {
     lsl::stream_outlet outlet(info);
     std::vector<float> sample(1, 0);
 
-    auto next_frame_time = std::chrono::high_resolution_clock::now();
-    int32_t sample_dur_us_white = 1000000;
-    int32_t sample_dur_us_black = 2000000;
+    const auto dur_white = std::chrono::microseconds(1'000'000);
+    const auto dur_black = std::chrono::microseconds(2'000'000);
 
     bool isWhite = true;
+    auto next_frame_time = std::chrono::high_resolution_clock::now();
 
     while (window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
@@ -23,31 +23,22 @@ int main() {
             }
         }
 
-        // Toggle color
-        isWhite = !isWhite;
+        auto now = std::chrono::high_resolution_clock::now();
+        if (now >= next_frame_time) {
+            isWhite = !isWhite;
 
-        // Clear screen with chosen color
-        if (isWhite) {
-            window.clear(sf::Color::White);
+            window.clear(isWhite ? sf::Color::White : sf::Color::Black);
             window.display();
 
-            sample[0] = 1;
+            sample[0] = isWhite ? 1 : 0;
             outlet.push_sample(sample);
 
-            next_frame_time += std::chrono::microseconds(sample_dur_us_white);
-            std::this_thread::sleep_until(next_frame_time);
-        } else {
-            window.clear(sf::Color::Black);
-            window.display();
+            next_frame_time = next_frame_time + (isWhite ? dur_black : dur_white);
 
-            sample[0] = 0;
-            outlet.push_sample(sample);
-
-            next_frame_time += std::chrono::microseconds(sample_dur_us_black);
-            std::this_thread::sleep_until(next_frame_time);
+            std::cout << now << std::endl;
         }
 
-        std::cout << std::chrono::high_resolution_clock::now() << std::endl;
+        // std::this_thread::sleep_for(std::chrono::microseconds(1000));
     }
 
     return 0;
