@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.31)
 project(PhotoDiodeTester)
 
 set(LSL_DIR "${CMAKE_SOURCE_DIR}/liblsl")
+set(CMAKE_CXX_STANDARD 23)
+#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static -static-libgcc -static-libstdc++")
+
 include_directories(${LSL_DIR}/include)
 link_directories(${LSL_DIR}/lib)
 
@@ -15,9 +18,6 @@ FetchContent_Declare(SFML
         EXCLUDE_FROM_ALL
         SYSTEM)
 FetchContent_MakeAvailable(SFML)
-
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static -static-libgcc -static-libstdc++")
 
 add_executable(PhotoDiodeTester main.cpp)
 

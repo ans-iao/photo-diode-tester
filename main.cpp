@@ -33,7 +33,7 @@ int main() {
             sample[0] = isWhite ? 1 : 0;
             outlet.push_sample(sample);
 
-            next_frame_time = next_frame_time + (isWhite ? dur_black : dur_white);
+            next_frame_time = next_frame_time + (isWhite ? dur_white : dur_black);
 
             std::cout << now << std::endl;
         }
